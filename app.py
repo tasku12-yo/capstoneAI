@@ -17,7 +17,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # 1. Muat Model AI (Sesuaikan path jika berbeda)
-MODEL_PATH = 'models/egg_model.h5'
+MODEL_PATH = 'models/egg_model.keras'
 try:
     model = load_model(MODEL_PATH)
     print("✅ Model berhasil dimuat!")
