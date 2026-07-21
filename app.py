@@ -4,6 +4,7 @@ from flask import Flask, request, render_template, jsonify
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from werkzeug.utils import secure_filename
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
 # Inisialisasi Aplikasi Flask
 app = Flask(__name__)
@@ -25,7 +26,7 @@ except Exception as e:
     print(f"❌ Gagal memuat model: {e}")
 
 # Daftar Kelas sesuai label training
-CLASS_NAMES = ['Crack', 'Empty', 'Good']
+CLASS_NAMES = ['crack', 'empty', 'good']
 
 def allowed_file(filename):
     """Memeriksa apakah format file diizinkan."""
@@ -36,7 +37,7 @@ def preprocess_image(img_path, target_size=(224, 224)):
     img = image.load_img(img_path, target_size=target_size)
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)  # Ubah shape jadi (1, 224, 224, 3)
-    img_array = img_array / 255.0                  # Normalisasi nilai piksel (0-1)
+    img_array = preprocess_input(img_array)
     return img_array
 
 # Route untuk Halaman Utama
@@ -72,6 +73,12 @@ def predict():
 
             predicted_label = CLASS_NAMES[predicted_class_idx]
 
+            print("--- DEBUG PREDIKSI ---")
+            print("Raw Model Output:", predictions[0])
+            print("Urutan Kelas:", CLASS_NAMES)
+            print("Hasil Tebakan Index:", predicted_class_idx)
+            print("----------------------")
+            
             # Mengembalikan respon dalam format JSON
             return jsonify({
                 'success': True,

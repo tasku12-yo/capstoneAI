@@ -1,5 +1,6 @@
 import os
 import sys
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
 print("🚀 Memulai proses training...")
 
@@ -28,7 +29,7 @@ print(" Memuat ImageDataGenerator...")
 
 # Data Augmentation untuk data training
 train_datagen = ImageDataGenerator(
-    rescale=1./255,
+    preprocessing_function=preprocess_input,
     rotation_range=20,
     width_shift_range=0.1,
     height_shift_range=0.1,
@@ -38,8 +39,7 @@ train_datagen = ImageDataGenerator(
     fill_mode='nearest'
 )
 
-# Rescale saja untuk data test (validasi)
-test_datagen = ImageDataGenerator(rescale=1./255)
+test_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 
 try:
     train_generator = train_datagen.flow_from_directory(
